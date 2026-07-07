@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.webapk.myapp" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>مسبحة</name>
+    <description>تطبيق أندرويد تم إنشاؤه من ملفات HTML الخاصة بي.</description>
+    <author email="info@com.webapk.myapp" href="http://com.webapk.myapp">salah eldin</author>
+    
+    <content src="index.html" />
+    
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+    
+    <!-- Platform Configuration -->
+    <preference name="Orientation" value="default" />
+    <preference name="Fullscreen" value="false" />
+    <preference name="BackgroundColor" value="#4f46e5" />
+    <preference name="KeepRunning" value="true" />
+    <preference name="DisallowOverscroll" value="true" />
+    <preference name="StatusBarBackgroundColor" value="#4f46e5" />
+    <preference name="StatusBarStyle" value="lightcontent" />
+
+    <platform name="android">
+        <allow-intent href="market:*" />
+        <preference name="AndroidXEnabled" value="true" />
+        <preference name="GradleVersion" value="8.0" />
+    </platform>
+</widget>

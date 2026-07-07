@@ -1,0 +1,6 @@
+{
+  "appId": "com.webapk.myapp",
+  "appName": "مسبحة",
+  "webDir": "www",
+  "bundledWebRuntime": false
+}

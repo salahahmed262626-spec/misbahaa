@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="تطبيق المسبحة الإلكترونية - لعد الأذكار والتسبيح">
+  <meta name="theme-color" content="#1a1a2e">
+  <title>المسبحة الإلكترونية</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&family=Tajawal:wght@400;500;700&family=Reem+Kufi:wght@400;700&family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ===== الشاشة الرئيسية ===== -->
+  <div id="mainScreen" class="screen active">
+    <header class="top-bar">
+      <button class="icon-btn" id="menuBtn" aria-label="قائمة الأذكار">☰</button>
+      <div class="dhikr-info">
+        <h1 class="dhikr-name" id="dhikrName">سبحان الله</h1>
+        <span class="dhikr-target" id="dhikrTargetDisplay">الهدف: ٣٣</span>
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn" id="dashboardBtn" aria-label="الداشبورد">📊</button>
+        <button class="icon-btn" id="settingsBtn" aria-label="الإعدادات">⚙️</button>
+      </div>
+    </header>
+
+    <div class="tap-zone" id="tapZone" role="button" tabindex="0" aria-label="اضغط للعد">
+      <div class="counter-container">
+        <div class="counter-number" id="counterDisplay">0</div>
+        <div class="progress-container">
+          <div class="progress-bar" id="progressBar">
+            <div class="progress-fill" id="progressFill" style="width:0%"></div>
+          </div>
+          <span class="progress-text" id="progressText">0%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-item">
+        <span class="stat-label">المرة السابقة</span>
+        <span class="stat-value" id="lastSessionDisplay">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">الإجمالي</span>
+        <span class="stat-value" id="totalDisplay">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">تم الهدف</span>
+        <span class="stat-value" id="targetReachedDisplay">0</span>
+      </div>
+    </div>
+
+    <footer class="bottom-bar">
+      <button class="action-btn" id="undoBtn" aria-label="تراجع">
+        <span class="btn-icon">↩️</span>
+        <span class="btn-label">تراجع</span>
+      </button>
+      <button class="action-btn" id="resetBtn" aria-label="تصفير">
+        <span class="btn-icon">🔄</span>
+        <span class="btn-label">تصفير</span>
+      </button>
+    </footer>
+  </div>
+
+  <!-- ===== قائمة الأذكار (Drawer) ===== -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <div class="drawer" id="dhikrDrawer">
+    <div class="drawer-header">
+      <h2>الأذكار</h2>
+      <button class="icon-btn" id="closeDrawerBtn" aria-label="إغلاق">✕</button>
+    </div>
+    <div class="drawer-search">
+      <input type="text" class="search-input" id="dhikrSearch" placeholder="بحث عن ذكر...">
+    </div>
+    <div class="drawer-list" id="dhikrList">
+    </div>
+    <div class="drawer-footer">
+      <button class="primary-btn" id="addDhikrBtn">+ إضافة ذكر جديد</button>
+    </div>
+  </div>
+
+  <!-- ===== شاشة الداشبورد ===== -->
+  <div id="dashboardScreen" class="screen">
+    <header class="top-bar">
+      <button class="icon-btn" id="backFromDashboard" aria-label="رجوع">←</button>
+      <h1>الداشبورد</h1>
+      <div></div>
+    </header>
+    <div class="dashboard-content">
+      <div class="dashboard-cards">
+        <div class="dash-card">
+          <div class="dash-card-icon">📅</div>
+          <div class="dash-card-label">اليوم</div>
+          <div class="dash-card-value" id="dashToday">0</div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-icon">🏆</div>
+          <div class="dash-card-label">الإجمالي الكلي</div>
+          <div class="dash-card-value" id="dashTotal">0</div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-icon">🔥</div>
+          <div class="dash-card-label">سلسلة الأيام</div>
+          <div class="dash-card-value" id="dashStreak">0</div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-icon">🎯</div>
+          <div class="dash-card-label">الأهداف المحققة</div>
+          <div class="dash-card-value" id="dashGoals">0</div>
+        </div>
+      </div>
+      <div class="chart-section">
+        <h3>النشاط اليومي (آخر 7 أيام)</h3>
+        <div class="chart-container" id="chartContainer">
+          <svg id="weeklyChart" viewBox="0 0 350 200" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+      </div>
+      <div class="top-dhikr-section">
+        <h3>الأذكار الأكثر استخدامًا</h3>
+        <div class="top-dhikr-list" id="topDhikrList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== شاشة الإعدادات ===== -->
+  <div id="settingsScreen" class="screen">
+    <header class="top-bar">
+      <button class="icon-btn" id="backFromSettings" aria-label="رجوع">←</button>
+      <h1>الإعدادات</h1>
+      <div></div>
+    </header>
+    <div class="settings-content">
+      <div class="setting-group">
+        <h3>المظهر</h3>
+        <div class="setting-item">
+          <span>الوضع الليلي</span>
+          <div class="theme-buttons">
+            <button class="theme-btn" data-theme-mode="light">☀️ نهاري</button>
+            <button class="theme-btn" data-theme-mode="dark">🌙 ليلي</button>
+            <button class="theme-btn" data-theme-mode="auto">🔄 تلقائي</button>
+          </div>
+        </div>
+      </div>
+      <div class="setting-group">
+        <h3>الخط</h3>
+        <div class="setting-item">
+          <span>نوع الخط</span>
+          <select class="setting-select" id="fontSelect">
+            <option value="Amiri">أميري</option>
+            <option value="Cairo">القاهرة</option>
+            <option value="Tajawal">تاجوال</option>
+            <option value="Reem Kufi">ريم كوفي</option>
+            <option value="Noto Naskh Arabic">نوتو نسخ</option>
+          </select>
+        </div>
+        <div class="setting-item">
+          <span>حجم الخط: <span id="fontSizeLabel">28</span></span>
+          <input type="range" class="setting-slider" id="fontSizeSlider" min="16" max="64" value="28">
+        </div>
+      </div>
+      <div class="setting-group">
+        <h3>التفاعل</h3>
+        <div class="setting-item">
+          <span>الاهتزاز</span>
+          <label class="toggle">
+            <input type="checkbox" id="vibrationToggle" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <span>الصوت</span>
+          <label class="toggle">
+            <input type="checkbox" id="soundToggle">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="setting-group">
+        <h3>الأرقام</h3>
+        <div class="setting-item">
+          <span>تنسيق الأرقام</span>
+          <select class="setting-select" id="numberFormatSelect">
+            <option value="arabic">عربية (١٢٣)</option>
+            <option value="latin">لاتينية (123)</option>
+          </select>
+        </div>
+      </div>
+      <div class="setting-group">
+        <h3>البيانات</h3>
+        <div class="setting-item">
+          <button class="secondary-btn" id="exportBtn">📥 تصدير البيانات</button>
+        </div>
+        <div class="setting-item">
+          <button class="secondary-btn" id="importBtn">📤 استيراد البيانات</button>
+          <input type="file" id="importFileInput" accept=".json" style="display:none">
+        </div>
+        <div class="setting-item">
+          <button class="danger-btn" id="clearDataBtn">🗑️ مسح جميع البيانات</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== نافذة إضافة/تعديل ذكر (Modal) ===== -->
+  <div class="modal-overlay" id="dhikrModalOverlay"></div>
+  <div class="modal" id="dhikrModal">
+    <div class="modal-header">
+      <h2 id="modalTitle">إضافة ذكر جديد</h2>
+      <button class="icon-btn" id="closeModalBtn" aria-label="إغلاق">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="dhikrNameInput">نص الذكر</label>
+        <input type="text" class="form-input" id="dhikrNameInput" placeholder="أدخل نص الذكر...">
+      </div>
+      <div class="form-group">
+        <label for="dhikrTargetInput">الهدف (اختياري - اترك 0 بدون هدف)</label>
+        <input type="number" class="form-input" id="dhikrTargetInput" placeholder="مثال: 33" min="0" value="0">
+      </div>
+      <div class="form-group">
+        <label>اللون</label>
+        <div class="color-picker" id="colorPicker">
+          <button class="color-option" data-color="#2e7d32" style="background:#2e7d32"></button>
+          <button class="color-option" data-color="#1565c0" style="background:#1565c0"></button>
+          <button class="color-option" data-color="#6a1b9a" style="background:#6a1b9a"></button>
+          <button class="color-option" data-color="#e65100" style="background:#e65100"></button>
+          <button class="color-option" data-color="#c62828" style="background:#c62828"></button>
+          <button class="color-option" data-color="#00838f" style="background:#00838f"></button>
+          <button class="color-option" data-color="#f9a825" style="background:#f9a825"></button>
+          <button class="color-option" data-color="#4e342e" style="background:#4e342e"></button>
+          <button class="color-option" data-color="#37474f" style="background:#37474f"></button>
+        </div>
+      </div>
+      <input type="hidden" id="editingDhikrId" value="">
+    </div>
+    <div class="modal-footer">
+      <button class="secondary-btn" id="cancelModalBtn">إلغاء</button>
+      <button class="primary-btn" id="saveDhikrBtn">💾 حفظ</button>
+    </div>
+  </div>
+
+  <!-- ===== نافذة التأكيد المخصصة (Custom Confirm) ===== -->
+  <div class="modal-overlay" id="confirmOverlay"></div>
+  <div class="modal confirm-modal" id="confirmModal">
+    <div class="modal-header">
+      <h2 id="confirmTitle">تأكيد</h2>
+    </div>
+    <div class="modal-body">
+      <p id="confirmMessage">هل أنت متأكد؟</p>
+    </div>
+    <div class="modal-footer">
+      <button class="secondary-btn" id="confirmCancelBtn">إلغاء</button>
+      <button class="danger-btn" id="confirmOkBtn">تأكيد</button>
+    </div>
+  </div>
+
+  <!-- ===== إشعار (Toast) ===== -->
+  <div class="toast" id="toast"></div>
+
+  <!-- ===== إشعار الهدف (Celebration) ===== -->
+  <div class="celebration" id="celebration">
+    <div class="celebration-content">
+      <div class="celebration-icon">🎉</div>
+      <h2>مبروك! 🎊</h2>
+      <p id="celebrationText">لقد حققت الهدف!</p>
+      <button class="primary-btn" id="celebrationClose">أحسنت!</button>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/counter.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
